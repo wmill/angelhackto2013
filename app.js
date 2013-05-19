@@ -125,6 +125,7 @@ app.get('/tv/:tv_id/item/:item_id', function (req, res){
 });
 	//var item_details  = items.items[parseInt(req.params.item_id, 10)];
 app.get('/tv/:tv_id/items', function (req, res){
+	console.log(db_url);
 	var pg_client = new pg.Client(db_url);
 	pg_client.connect(function(err) {
 		pg_client.query('select * from items;'  , function(err, result) {
