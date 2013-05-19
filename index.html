@@ -1,14 +1,11 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  var chat = io.connect('http://localhost/chat')
-    , news = io.connect('http://localhost/news');
+  var notifications = io.connect('http://localhost/tv/me')
+
   
-  chat.on('bacon', function(message){
-  	console.log(message);
-  })
-  
-  news.on('news', function () {
-    news.emit('woot');
-    console.log('woot?');
+  notifications.on('show_item', function(item){
+  	// item.url, item.name, whatever else
+  	console.log(item);
   });
+  
 </script>

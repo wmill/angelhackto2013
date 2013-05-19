@@ -4,6 +4,8 @@ var app = require('express')()
 
 var chat;
 
+var tvs = {};
+
 server.listen(8000);
 
 app.get('/', function (req, res) {
@@ -15,6 +17,14 @@ app.get('/bacon', function (req, res){
 	res.sendfile(__dirname + '/index.html');
 });
 
+app.get('/tv/:tv_id', function (req, res){
+	//req.params.tv_id
+	var tv_id = req.params.tv_id;
+	//create the socket if it doesn't exist
+	if (!(tv_id in tvs)) {
+		tvs[tv_id] = io.of('/tv/' + tv_id);
+	}
+});
 
 chat = io
   .of('/chat')
