@@ -2,3 +2,10 @@
     <input type="text" name="tv_id">
     <input type="submit" value="Submit">
 </form>
+<ul>
+{{#ids}}
+<li>
+<a href="/tv/{{.}}">{{.}}</a>
+</li>
+{{/ids}}
+</ul>

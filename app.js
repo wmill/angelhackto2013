@@ -20,12 +20,17 @@ var tvs = {};
 server.listen(8000);
 
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
+	res.writeHead(302, {
+		'Location': '/tv/'
+	});
+	res.end();
 });
 
 
 app.get('/tv/', function (req, res){
 	//input the tv code
+	res.locals = {'ids': Object.keys(tvs)};
+	console.log(res.locals);
 	res.render('enter_tv_id');
 });
 
