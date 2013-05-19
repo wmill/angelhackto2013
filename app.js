@@ -2,11 +2,16 @@ var app = require('express')()
   , server = require('http').createServer(app)
   , io = require('socket.io').listen(server);
 
+
 app.set('view engine', 'hbs');
-app.use(express.static(__dirname + '/public'));
+//app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/views');
 
 var hbs = require('hbs');
+
+//hbs.registerPartial('partial', fs.readFileSync(__dirname + '/views/boiler_plate.hbs', 'utf8'));
+
+var items = require('./items.js');
 
 var tvs = {};
 
