@@ -14,7 +14,7 @@ var hbs = require('hbs');
 var pg = require('pg');
 
 var db_url = process.env.DATABASE_URL || "tcp://localhost/qrplay";
-var pg_client = new pg.Client(db_url);
+
 
 
 //hbs.registerPartial('partial', fs.readFileSync(__dirname + '/views/boiler_plate.hbs', 'utf8'));
@@ -29,6 +29,7 @@ server.listen(port);
 
 
 app.get('/pg_test', function (req, res) {
+	var pg_client = new pg.Client(db_url);
 	pg_client.connect(function(err) {
 		pg_client.query('select * from items', function(err, result) {
 			console.log(result.rows);
@@ -83,14 +84,26 @@ app.get('/tv/:tv_id/item/:item_id', function (req, res){
 		res.render('enter_tv_id');
 		return;
 	}
-	//fetch item info some how
+	//fetch item info from db
+	var pg_client = new pg.Client(db_url);
 	pg_client.connect(function(err) {
 		pg_client.query('select * from items where id=$1', req.params.item_id , function(err, result) {
-			console.log(result.rows);
+			console.log(err);
+			console.log(result);
 
-			tvs[tv_id].emit('show_item', result.rows[0]);
-			res.render('item_sent');
-		})
+			if(result.rowCount > 0){
+				tvs[tv_id].emit('show_item', result.rows[0]);
+				res.render('item_sent');
+				pg_client.end();
+			}
+			else {
+				//need to do some error handling
+				res.render('blank');
+				pg_client.end();
+			}
+
+
+		});
 	});
 	//var item_details  = items.items[parseInt(req.params.item_id, 10)];
 
