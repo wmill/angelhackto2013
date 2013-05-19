@@ -11,6 +11,12 @@ app.use(express.bodyParser());
 
 var hbs = require('hbs');
 
+var pg = require('pg');
+
+var db_url = process.env.DATABASE_URL || "tcp://localhost/qrplay";
+var pg_client = new pg.Client(db_url);
+
+
 //hbs.registerPartial('partial', fs.readFileSync(__dirname + '/views/boiler_plate.hbs', 'utf8'));
 
 var items = require('./items.js');
@@ -20,6 +26,18 @@ var tvs = {};
 var port = process.env.PORT || 8000;
 
 server.listen(port);
+
+
+app.get('/pg_test', function (req, res) {
+	pg_client.connect(function(err) {
+		pg_client.query('select * from items', function(err, result) {
+			console.log(result.rows);
+			//output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+			res.render('blank')
+		})
+	});
+});
+
 
 app.get('/', function (req, res) {
 	res.writeHead(302, {
@@ -66,9 +84,16 @@ app.get('/tv/:tv_id/item/:item_id', function (req, res){
 		return;
 	}
 	//fetch item info some how
-	var item_details  = items.items[parseInt(req.params.item_id, 10)];
-	tvs[tv_id].emit('show_item', item_details);
+	pg_client.connect(function(err) {
+		pg_client.query('select * from items where id=$1', req.params.item_id , function(err, result) {
+			console.log(result.rows);
 
-	res.render('item_sent');
+			tvs[tv_id].emit('show_item', result.rows[0]);
+			res.render('item_sent');
+		})
+	});
+	//var item_details  = items.items[parseInt(req.params.item_id, 10)];
+
+
 });
 
