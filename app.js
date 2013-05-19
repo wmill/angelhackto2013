@@ -54,14 +54,14 @@ app.get('/tv/:tv_id/item/:item_id', function (req, res){
 	var tv_id = req.params.tv_id;
 	//create the socket if it doesn't exist
 	if (!(tv_id in tvs)) {
-		console.log('bad tv_id: ', tv_id)
+		console.log('bad tv_id: ', tv_id);
 		res.render('enter_tv_id');
 		return;
 	}
 	//fetch item info some how
-	var item_details  = {"stuff":""}
-	tvs[item_id].emit('show_item', item_details)
-	//need to pass params to template, 
-	res.render('item_sent')
+	var item_details  = {"stuff": req.params.item_id};
+	tvs[tv_id].emit('show_item', item_details);
+
+	res.render('item_sent');
 });
 
