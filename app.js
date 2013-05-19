@@ -87,13 +87,30 @@ app.get('/tv/:tv_id/item/:item_id', function (req, res){
 	//fetch item info from db
 	var pg_client = new pg.Client(db_url);
 	pg_client.connect(function(err) {
-		pg_client.query('select * from items where id=$1', req.params.item_id , function(err, result) {
+		pg_client.query('select * from items;'  , function(err, result) {
+			var item_id = parseInt(req.params.item_id, 10);
+
 			console.log(err);
 			console.log(result);
 
 			if(result.rowCount > 0){
-				tvs[tv_id].emit('show_item', result.rows[0]);
-				res.render('item_sent');
+				var items = result.rows;
+				var current_item = null;
+				for (var i=0; i< items.length; i++){
+					if (items[i].id === item_id) {
+						//send the signal to the web socket
+						tvs[tv_id].emit('show_item', items[i]);
+					}
+				}
+				//tvs[tv_id].emit('show_item', result.rows[0]);
+				res.render('item_sent', {
+					'items': items,
+					'tv_id': tv_id
+				});
+				console.log({
+					'items': items,
+					'tv_id': tv_id
+				});
 				pg_client.end();
 			}
 			else {

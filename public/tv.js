@@ -14,7 +14,7 @@ setup_sockets = function(tv_id){
         });
         break;
 
-      case picture:
+      case 'picture':
         new_content = $('<img class="img" src=' + url + '></img>');
         break;
   
