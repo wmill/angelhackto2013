@@ -17,7 +17,7 @@ var items = require('./items.js');
 
 var tvs = {};
 
-server.listen(80);
+server.listen(8000);
 
 app.get('/', function (req, res) {
 	res.writeHead(302, {
