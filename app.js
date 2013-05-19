@@ -122,8 +122,33 @@ app.get('/tv/:tv_id/item/:item_id', function (req, res){
 
 		});
 	});
+});
 	//var item_details  = items.items[parseInt(req.params.item_id, 10)];
+app.get('/tv/:tv_id/items', function (req, res){
+	var pg_client = new pg.Client(db_url);
+	pg_client.connect(function(err) {
+		pg_client.query('select * from items;'  , function(err, result) {
 
+			if(result.rowCount > 0){
+				var items = result.rows;
+				var current_item = null;
+				for (var i=0; i< items.length; i++){
+					items[i].send_url = "http://evening-fjord-2389.herokuapp.com/tv/" + req.params.tv_id + "/item/" + items[i].id;
+				}
+				//tvs[tv_id].emit('show_item', result.rows[0]);
+				res.render('items_list', {
+					'tv_id': req.params.tv_id,
+					'items': items
+				});
+				pg_client.end();
+			}
+			else {
+				//need to do some error handling
+				res.render('blank');
+				pg_client.end();
+			}
 
+		});
+	});
 });
 
