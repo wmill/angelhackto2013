@@ -17,7 +17,9 @@ var items = require('./items.js');
 
 var tvs = {};
 
-server.listen(8000);
+var port = process.env.PORT || 8000;
+
+server.listen(port);
 
 app.get('/', function (req, res) {
 	res.writeHead(302, {
