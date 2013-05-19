@@ -13,7 +13,7 @@ var hbs = require('hbs');
 
 var pg = require('pg');
 
-var db_url = process.env.DATABASE_URL || "tcp://localhost/qrplay";
+var db_url = process.env.HEROKU_POSTGRESQL_AMBER_URL || "tcp://localhost/qrplay";
 
 
 
