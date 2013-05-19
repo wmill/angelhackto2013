@@ -5,7 +5,7 @@ var app = require('express')()
 
 var express = require('express');
 app.set('view engine', 'hbs');
-//app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/views');
 app.use(express.bodyParser());
 
@@ -59,7 +59,7 @@ app.get('/tv/:tv_id/item/:item_id', function (req, res){
 		return;
 	}
 	//fetch item info some how
-	var item_details  = {"stuff": req.params.item_id};
+	var item_details  = items.items[parseInt(req.params.item_id, 10)];
 	tvs[tv_id].emit('show_item', item_details);
 
 	res.render('item_sent');

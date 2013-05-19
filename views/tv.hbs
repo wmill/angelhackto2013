@@ -1,31 +1,15 @@
+<script src="/tv.js">
+</script>
+
 <script>
-var notifications = io.connect('/tv_sockets/{{tv_id}}');
-notifications.on('show_item', function(item) {
-// item.url, item.type, where type = video / picture
-
-  var url = item.url;
-  var type = item.type; 
-  if (type === 'video')
-  {
-    $('<iframe />', {
-      name: 'myframe',
-      src: url    
-    }).appendTo('body');
-  }
-  else
-  {
-    $('<img class="img" src=' + url + '</img>').appendTo('body');
-  }
-  console.log(item);
-});
-  
-
+setup_sockets('{{tv_id}}');
 </script>
 
 <style>
 .myframe{
-  width: '560';
-  height: '315';
+  position:fixed;
+  width: 100%;
+  height: 100%;
   frameborder: '0';
   allowfullscreen;
 }
@@ -34,4 +18,10 @@ notifications.on('show_item', function(item) {
   width: 100%;
   height: 100%;
 }
+#content{
+  position:fixed;
+  width: 100%;
+  height: 100%; 
+}
 </style>
+<div id="content"></div>
