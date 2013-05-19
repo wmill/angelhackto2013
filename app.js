@@ -3,9 +3,11 @@ var app = require('express')()
   , io = require('socket.io').listen(server);
 
 
+var express = require('express');
 app.set('view engine', 'hbs');
 //app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/views');
+app.use(express.bodyParser());
 
 var hbs = require('hbs');
 
@@ -27,12 +29,20 @@ app.get('/tv/', function (req, res){
 	res.render('enter_tv_id');
 });
 
+app.post('/tv/', function (req, res){
+	var tv_id = req.body.tv_id;
+	res.writeHead(302, {
+		'Location': '/tv/' + tv_id
+	});
+	res.end();
+});
+
 app.get('/tv/:tv_id', function (req, res){
 	//req.params.tv_id
 	var tv_id = req.params.tv_id;
 	//create the socket if it doesn't exist
 	if (!(tv_id in tvs)) {
-		tvs[tv_id] = io.of('/tv/' + tv_id);
+		tvs[tv_id] = io.of('/tv_sockets/' + tv_id);
 	}
 	//need to pass params to template, 
 	res.locals = {'tv_id': tv_id};
